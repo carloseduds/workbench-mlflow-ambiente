@@ -27,6 +27,7 @@ RUN chown -R $NB_UID:$NB_GID $HOME_DIR && \
 RUN pip install \
     mlflow==${MLFLOW_VERSION} \
     psycopg2-binary \
+    boto3 \
     "protobuf<4.0.0" \
     "jupyterlab>=4.0.0" \
     "numpy<1.24" \
@@ -35,13 +36,22 @@ RUN pip install \
     jupyter_contrib_nbextensions \
     jupyter_nbextensions_configurator \
     tqdm && \
+    pip install \
+    torch==2.6.0 \
+    torchvision==0.21.0 \
+    torchaudio==2.6.0 \
+    pytorch-lightning \
+    'lightning-flash[text]' \
+    --extra-index-url https://download.pytorch.org/whl/cu126 && \
     fix-permissions $CONDA_DIR
 
 # Prepara diretório do MLflow com permissões adequadas
 RUN ldconfig && \
-    mkdir -p $MLFLOW_ARTIFACT_STORE && \
-    chown -R ${NB_UID}:${NB_GID} $MLFLOW_ARTIFACT_STORE && \
-    fix-permissions $MLFLOW_ARTIFACT_STORE
+    if [[ "$MLFLOW_ARTIFACT_STORE" != s3* ]]; then \
+      mkdir -p $MLFLOW_ARTIFACT_STORE && \
+      chown -R ${NB_UID}:${NB_GID} $MLFLOW_ARTIFACT_STORE && \
+      fix-permissions $MLFLOW_ARTIFACT_STORE; \
+    fi
 
 # Troca para usuário Jupyter
 USER $NB_UID

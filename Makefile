@@ -31,18 +31,25 @@ JUPYTER_CHOWN_EXTRA := "/data"
 
 ## ======= AÇÕES PRINCIPAIS =======
 
-run: dirs
+run: dirs create-networks
 	docker-compose up --build -d
 
 build: dirs ## Constrói imagem Docker
 	DOCKER_BUILDKIT=$(BUILDKIT) COMPOSE_DOCKER_CLI_BUILD=$(BUILDKIT) \
 	docker-compose build $(BUILD_OPTS)
 
-reset:  ## Remove tudo e reinicia o ambiente do zero
-	down-all destroy run
-
 destroy: clean ## Remove diretórios e containers
 	rm -rf notebooks logs data
+
+clean: ## Remove containers e volumes relacionados ao projeto
+	docker-compose down $(DOWN_OPTS)
+
+down-all: ## Remove tudo relacionado ao projeto (containers, volumes, imagens)
+	docker-compose down $(DOWN_ALL_OPTS)
+
+prune: ## Remove imagens e containers com label do projeto
+	docker container prune -f --filter "label=mlops-pytemplate"
+	docker image prune -f --filter "label=mlops-pytemplate"
 
 test: ## Executa os testes
 	docker-compose run --rm jupyter pytest
@@ -60,18 +67,7 @@ dirs: ## Cria diretórios necessários
 	mkdir -p logs
 	mkdir -p data
 	mkdir -p data/processed
-
-## ======= GESTÃO DO DOCKER =======
-
-clean: ## Remove containers e volumes relacionados ao projeto
-	docker-compose down $(DOWN_OPTS)
-
-down-all: ## Remove tudo relacionado ao projeto (containers, volumes, imagens)
-	docker-compose down $(DOWN_ALL_OPTS)
-
-prune: ## Remove imagens e containers com label do projeto
-	docker container prune -f --filter "label=mlops-pytemplate"
-	docker image prune -f --filter "label=mlops-pytemplate"
+	mkdir -p data/minio_data
 
 ## ======= BASES DE CONTAINER =======
 
@@ -111,6 +107,11 @@ clean-python: ## Limpa arquivos temporários Python
 fix-line-endings: ## Converte arquivos .sh para o formato Unix (evita erro de '\r')
 	find . -type f -name "*.sh" -exec dos2unix {} \;
 
+create-networks: ## Cria redes docker se não existirem
+	@docker network inspect frontend >/dev/null 2>&1 || docker network create frontend
+	@docker network inspect backend >/dev/null 2>&1 || docker network create backend
+	@docker network inspect storage >/dev/null 2>&1 || docker network create storage
+	
 ## ======= AJUDA =======
 
 help: ## Lista todos os comandos disponíveis

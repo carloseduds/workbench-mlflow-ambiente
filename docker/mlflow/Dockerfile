@@ -6,10 +6,11 @@ ARG MLFLOW_VERSION
 ARG SERVER_DIR=/server
 ARG MLFLOW_ARTIFACT_STORE
 
-ENV MLFLOW_ARTIFACT_ROOT=/${MLFLOW_ARTIFACT_STORE}
+ENV MLFLOW_ARTIFACT_ROOT=${MLFLOW_ARTIFACT_STORE}
 
 RUN pip install --upgrade pip && \
     pip install \
+    boto3 \
     "protobuf<4.0.0" \
     "numpy<1.24" \
     "sqlalchemy<1.4" && \
