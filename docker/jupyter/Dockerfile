@@ -27,6 +27,7 @@ RUN chown -R $NB_UID:$NB_GID $HOME_DIR && \
 RUN pip install \
     mlflow==${MLFLOW_VERSION} \
     psycopg2-binary \
+    wandb \
     boto3 \
     "protobuf<4.0.0" \
     "jupyterlab>=4.0.0" \
