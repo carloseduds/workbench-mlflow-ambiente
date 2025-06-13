@@ -79,7 +79,6 @@ services:
     user: "${POSTGRES_UID}:${POSTGRES_GID}"
     build:
       context: ./docker/postgres
-    image: ${IMAGE_OWNER}/${REPO_SLUG}/${POSTGRES_IMAGE_NAME}:${VERSION}
     restart: always
     environment: 
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -89,6 +88,7 @@ services:
     volumes:
       - ./${POSTGRES_STORE}:/var/lib/postgresql/data
     networks:
+      - frontend
       - backend
 
   minio:

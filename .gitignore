@@ -122,4 +122,13 @@ dmypy.json
 .pyre/:q
 
 # data
-/data/db/**
+data/
+
+# Lightning logs
+lightning_logs/
+
+# Notebooks
+notebooks/
+
+# Workbench
+src/workbench/

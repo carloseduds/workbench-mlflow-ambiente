@@ -16,35 +16,15 @@ RUN pip install --upgrade pip
 
 # Copia e instala dependências do projeto
 WORKDIR $WORK_DIR
-COPY ./requirements.txt ./setup.py ./
+COPY ./docker/jupyter/requirements.txt ./
+COPY ./setup.py ./
 COPY ./src/ ./src/
+
 RUN chown -R $NB_UID:$NB_GID $HOME_DIR && \
+    pip install --upgrade pip && \
     pip install -r requirements.txt && \
     pip install -e . && \
     fix-permissions $HOME_DIR
-
-# Instala dependências adicionais
-RUN pip install \
-    mlflow==${MLFLOW_VERSION} \
-    psycopg2-binary \
-    wandb \
-    boto3 \
-    "protobuf<4.0.0" \
-    "jupyterlab>=4.0.0" \
-    "numpy<1.24" \
-    "notebook>=7.0.0" \
-    "jupyter_server>=2.0.0" \
-    jupyter_contrib_nbextensions \
-    jupyter_nbextensions_configurator \
-    tqdm && \
-    pip install \
-    torch==2.6.0 \
-    torchvision==0.21.0 \
-    torchaudio==2.6.0 \
-    pytorch-lightning \
-    'lightning-flash[text]' \
-    --extra-index-url https://download.pytorch.org/whl/cu126 && \
-    fix-permissions $CONDA_DIR
 
 # Prepara diretório do MLflow com permissões adequadas
 RUN ldconfig && \

@@ -14,7 +14,7 @@ RUN pip install --upgrade pip && \
     "protobuf<4.0.0" \
     "numpy<1.24" \
     "sqlalchemy<1.4" && \
-    pip install mlflow==$MLFLOW_VERSION psycopg2-binary && \
+    pip install mlflow>=$MLFLOW_VERSION psycopg2-binary && \
     mkdir -p ${SERVER_DIR} ${MLFLOW_ARTIFACT_ROOT}
 
 COPY ./scripts/wait-for-it.sh ${SERVER_DIR}/
