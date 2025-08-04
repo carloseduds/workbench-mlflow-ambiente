@@ -8,16 +8,13 @@ ARG MLFLOW_ARTIFACT_STORE
 
 ENV MLFLOW_ARTIFACT_ROOT=${MLFLOW_ARTIFACT_STORE}
 
+COPY ./docker/mlflow/requirements.txt ./
+
 RUN pip install --upgrade pip && \
-    pip install \
-    boto3 \
-    "protobuf<4.0.0" \
-    "numpy<1.24" \
-    "sqlalchemy<1.4" && \
-    pip install mlflow>=$MLFLOW_VERSION psycopg2-binary && \
+    pip install -r requirements.txt && \
     mkdir -p ${SERVER_DIR} ${MLFLOW_ARTIFACT_ROOT}
 
-COPY ./scripts/wait-for-it.sh ${SERVER_DIR}/
+COPY ./docker/mlflow/scripts/wait-for-it.sh ${SERVER_DIR}/
 RUN chmod +x ${SERVER_DIR}/wait-for-it.sh
 
 WORKDIR ${SERVER_DIR}

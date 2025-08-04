@@ -45,7 +45,8 @@ services:
 
   mlflow:
     build:
-      context: ./docker/mlflow
+      context: .
+      dockerfile: ./docker/mlflow/Dockerfile
       args:
         - MLFLOW_VERSION=${MLFLOW_VERSION}
         - MLFLOW_ARTIFACT_STORE=${MLFLOW_ARTIFACT_STORE}

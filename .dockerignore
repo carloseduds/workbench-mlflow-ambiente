@@ -23,6 +23,10 @@
 !docker/jupyter/requirements.test.txt
 !docker/jupyter/requirements.txt
 
+!docker/mlflow/Dockerfile
+!docker/mlflow/scripts/*.sh
+!docker/mlflow/requirements.txt
+
 # ignore unnecessary files inside the folders
 **/*~
 **/*.log
