@@ -28,7 +28,7 @@ make run           # sobe o ambiente
 Acesse:
 
 * Jupyter: [http://localhost:8888](http://localhost:8888)
-* MLflow UI: [http://localhost:5000](http://localhost:5000)
+* MLflow UI: [http://localhost:5000](http://localhost:80)
 * MinIO Console: [http://localhost:9001](http://localhost:9001)
 
 ---
